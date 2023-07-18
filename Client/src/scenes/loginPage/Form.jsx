@@ -23,7 +23,7 @@ const registerSchema = yup.object().shape({
   password: yup.string().required("required"),
   location: yup.string().required("required"),
   occupation: yup.string().required("required"),
-  picture: yup.string().required("required"),
+  pictureData: yup.string().required("required"),
 });
 
 const loginSchema = yup.object().shape({
@@ -38,7 +38,7 @@ const initialValuesRegister = {
   password: "",
   location: "",
   occupation: "",
-  picture: "",
+  pictureData: ""
 };
 
 const initialValuesLogin = {
@@ -48,6 +48,8 @@ const initialValuesLogin = {
 
 const Form = () => {
   const [pageType, setPageType] = useState("login");
+  const [image, setImage] = useState("")
+  const [dataUrl, setDataUrl] = useState(null)
   const { palette } = useTheme();
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -55,19 +57,23 @@ const Form = () => {
   const isLogin = pageType === "login";
   const isRegister = pageType === "register";
 
-  const register = async (values, onSubmitProps) => {
-    // this allows us to send form info with image
-    const formData = new FormData();
-    for (let value in values) {
-      formData.append(value, values[value]);
+  const readImage = (file) => {
+    var reader = new FileReader()
+    reader.onload = function() {
+      setDataUrl(reader.result)
+      setImage(file.name)
     }
-    formData.append("picturepath", values.picture.name);
+    reader.readAsDataURL(file);
+    return dataUrl
+  }
 
+  const register = async (values, onSubmitProps) => {
     const savedUserResponse = await fetch(
       "http://localhost:3001/auth/register",
       {
         method: "POST",
-        body: formData,
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(values),
       }
     );
     const savedUser = await savedUserResponse.json();
@@ -83,7 +89,7 @@ const Form = () => {
       "http://localhost:3001/auth/login",
       {
         method: "POST",
-        headers: { "Content-Type": "application/json"},
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify(values),
       }
     );
@@ -186,7 +192,7 @@ const Form = () => {
                     acceptedFiles=".jpg,.jpeg,.png"
                     multiple={false}
                     onDrop={(acceptedFiles) =>
-                      setFieldValue("picture", acceptedFiles[0])
+                      setFieldValue("pictureData", readImage(acceptedFiles[0]))
                     }
                   >
                     {({ getRootProps, getInputProps }) => (
@@ -197,11 +203,11 @@ const Form = () => {
                         sx={{ "&:hover": { cursor: "pointer" } }}
                       >
                         <input {...getInputProps()} />
-                        {!values.picture ? (
+                        {!values.pictureData ? (
                           <p>Add Picture Here</p>
                         ) : (
                           <FlexBetween>
-                            <Typography>{values.picture.name}</Typography>
+                            <Typography>{image}</Typography>
                             <EditOutlinedicon />
                           </FlexBetween>
                         )}
