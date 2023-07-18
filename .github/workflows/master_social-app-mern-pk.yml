@@ -64,5 +64,5 @@ jobs:
         with:
           app-name: 'social-app-mern-pk'
           slot-name: 'Production'
-          publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_99CC0046D63E4FC3BE13BBE375E6E4F8 }}
+          publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_82140E40DBDB4A2D8744795B89360449 }}
           package: .
