@@ -21,26 +21,17 @@ jobs:
         with:
           node-version: '18.x'
 
-      - name: npm install, build Client
-        working-directory: ./Client
+      - name: npm install, build, and test
         run: |
           npm install
           npm run build --if-present
-        
-      - name: npm install, build Server
-        working-directory: ./Server
-        run: |
-          npm install
-          npm run build --if-present
-          
-      - name: Zip artifact for deployment
-        run: Compress-Archive . release.zip
+          npm run test --if-present
       
       - name: Upload artifact for deployment job
         uses: actions/upload-artifact@v2
         with:
           name: node-app
-          path: release.zip
+          path: .
 
   deploy:
     runs-on: ubuntu-latest
@@ -54,9 +45,6 @@ jobs:
         uses: actions/download-artifact@v2
         with:
           name: node-app
-          
-      - name: unzip artifact for deployment
-        run: unzip release.zip
 
       - name: 'Deploy to Azure Web App'
         uses: azure/webapps-deploy@v2
@@ -64,5 +52,5 @@ jobs:
         with:
           app-name: 'social-app-mern-pk'
           slot-name: 'Production'
-          publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_99CC0046D63E4FC3BE13BBE375E6E4F8 }}
+          publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_82140E40DBDB4A2D8744795B89360449 }}
           package: .
