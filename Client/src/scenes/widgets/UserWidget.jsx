@@ -15,7 +15,7 @@ import twitter from "../../assets/twitter.png"
 import linkedin from "../../assets/linkedin.png"
 
 // eslint-disable-next-line react/prop-types
-const UserWidget = ({ userId, picturePath }) => {
+const UserWidget = ({ userId }) => {
   const [user, setUser] = useState(null);
   const { palette } = useTheme();
   const navigate = useNavigate();
@@ -61,7 +61,7 @@ const UserWidget = ({ userId, picturePath }) => {
         onClick={() => navigate(`/profile/${userId}`)}
       >
         <FlexBetween gap="1rem">
-          <UserImage image={picturePath} />
+          <UserImage image={user.pictureData} />
           <Box>
             <Typography
               variant="h4"
