@@ -78,6 +78,7 @@ const Form = () => {
     );
     const savedUser = await savedUserResponse.json();
     onSubmitProps.resetForm()
+    setDataUrl(null)
 
     if (savedUser) {
       setPageType("login")
@@ -189,7 +190,9 @@ const Form = () => {
                   p="1rem"
                 >
                   <Dropzone
-                    acceptedFiles=".jpg,.jpeg,.png"
+                    accept={{
+                      "image/*": [".jpg", ".jpeg", ".png"],
+                    }}
                     multiple={false}
                     onDrop={(acceptedFiles) =>
                       setFieldValue("pictureData", readImage(acceptedFiles[0]))

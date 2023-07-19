@@ -68,6 +68,7 @@ const MyPostWidget = ({ pictureData }) => {
     dispatch(setPosts({ posts }));
     setImage(null);
     setPost("");
+    setDataUrl(null)
   };
 
   return (
@@ -94,7 +95,9 @@ const MyPostWidget = ({ pictureData }) => {
           p="1rem"
         >
           <Dropzone
-            acceptedFiles=".jpg,.jpeg,.png"
+            accept={{
+              "image/*": [".jpg", ".jpeg", ".png"],
+            }}
             multiple={false}
             onDrop={(acceptedFiles) => readImage(acceptedFiles[0])}
           >
